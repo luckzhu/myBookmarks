@@ -41,11 +41,10 @@
             if (websiteInLocalStorage) {
                 website = websiteInLocalStorage
             }
-            else { }
             //返回keys和website的值，由于return只能返回一个值，所以有两个值时，我们采取hash形式返回
             return {
-                keys: keys,
-                website: website
+                'keys': keys,
+                'website': website
             }
         }
 
@@ -73,7 +72,7 @@
 
         function createButton(id) {
             var button = tag('button')
-            button.textContent = '编辑'
+            button.textContent = 'Edit'
             button.id = id
             button.onclick = function (clickButton) {
 
