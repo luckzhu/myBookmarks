@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="main.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <header></header>
+    <main>
+        <div class="wrapper" id="main"></div>
+    </main>
+    <footer></footer>
+    <script>
+        //1.初始化数据
+        var hash = init();
+        var keys = hash.keys;
+        var website = hash.website;
+
+        function init() {
+            //初始化keys的值，三行，两个hash嵌套
+            var keys = {
+                '0': { 0: 'q', 1: 'w', 2: 'e', 3: 'r', 4: 't', 5: 'y', 6: 'u', 7: 'i', 8: 'o', 9: 'p', length: 10 },
+                '1': { 0: 'a', 1: 's', 2: 'd', 3: 'f', 4: 'g', 5: 'h', 6: 'j', 7: 'k', 8: 'l', length: 9 },
+                '2': { 0: 'z', 1: 'x', 2: 'c', 3: 'v', 4: 'b', 5: 'n', 6: 'm', length: 7 },
+                'length': 3
+            }
+
+
+            //初始化每个键盘对应的网址
+            var website = {
+                'q': 'qq.com', 'w': 'weibo.com', 'e': 'ele.me', 'r': 'renren.com', 't': 'tianya.com', 'y': 'youtube.com', 'u': 'uc.com', 'i': 'iqiyi.com', 'o': 'opera.com', 'p': undefined, 'a': 'acfun.tv', 's': 'sohu.com', 'z': 'zhihu.com', 'm': 'www.mcdonalds.com.cn'
+            }
+            //取出LocalStorage中的newWebsite中的新网址
+            var websiteInLocalStorage = getFromLocalStorage('newWebsit')
+            //如果localStorage改变了，即websiteInLocalStorage的值为真，才赋值改变website
+            if (websiteInLocalStorage) {
+                website = websiteInLocalStorage
+            }
+            else { }
+            //返回keys和website的值，由于return只能返回一个值，所以有两个值时，我们采取hash形式返回
+            return {
+                keys: keys,
+                website: website
+            }
+        }
+
+        //如果localStorage不为空的话，就把localStroage的值传给name，init函数中传给了newWebsite
+        function getFromLocalStorage(name) {
+            return JSON.parse(localStorage.getItem(name) || 'null')
+        }
+
+        //2. 生成键盘
+        //遍历keys,生成kbd标签,传入之前初始化的keys和website
+        generateKeyboard(keys, website)
+
+        //封装的创建一个标签的函数，传入参数为标签名
+        function tag(tagName) {
+            return document.createElement(tagName)
+        }
+
+        //创建一个span标签，把text即keys键名传入
+        function createSpan(textContent) {
+            var span = tag('span')
+            span.textContent = textContent
+            span.className = 'text'
+            return span
+        }
+
+        function createButton(id) {
+            var button = tag('button')
+            button.textContent = '编辑'
+            button.id = id
+            button.onclick = function (clickButton) {
+
+                var clickElement = clickButton.target // 获取被点击的元素
+                var img2 = clickElement.previousSibling //返回被点击元素的前一个节点，这里即div
+
+
+                var key = clickElement['id'] // 获取点击元素的按钮名称的id
+                var x = prompt('给我一个网址') //让用户输入新的网址
+                website[key] = x // website中的对应网址变更
+
+                img2.src = 'http://' + x + '/favicon.ico'
+                img2.onerror = function (srcError) {
+                    srcError.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+                }
+                localStorage.setItem('newWebsite', JSON.stringify(hash))
+            }
+            return button
+        }
+
+        //domain域名,获取键盘旁边的图标，如果没有就用备用默认图标
+        function createImg(domain) {
+            var img = tag('img')
+            if (domain) {
+                img.src = 'http://' + domain + '/favicon.ico'
+            } else {
+                img.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+            }
+            //onerror文档或图像加载过程中发生错误时被触发
+            img.onerror = function (xxx) {
+                xxx.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
+            }
+            return img
+        }
+
+
+        function generateKeyboard(keys, website) {
+            //遍历keys第一层，创建class为row的第一层div
+            for (var i = 0; i < keys.length; i++) {
+                //创建一个div标签
+                var div = tag('div')
+                div.className = 'row'
+                //把这个div标签放在main的子标签中
+                main.appendChild(div)
+
+                var row = keys[i] //row会依次变成0、1、2，即keys中的三个数组
+
+                //遍历每个row之中的案件
+                for (var j = 0; j < row.length; j++) {
+                    var kbd = tag('kbd')
+                    kbd.className = 'key'
+                    div.appendChild(kbd)
+                    var span = createSpan(row[j])
+
+                    var button = createButton(row[j])
+
+                    var img = createImg(website[row[j]])
+
+                    kbd.appendChild(span)
+                    kbd.appendChild(button)
+                    kbd.appendChild(img)
+
+                }
+            }
+        }
+
+        //3. 监听用户动作
+        listenToUser(website)
+
+        function listenToUser(website) {
+            document.onkeypress = function (openWebsite) {
+                var openWeb = website[openWebsite.key]
+                window.open('http://' + openWeb, '_blank')
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
