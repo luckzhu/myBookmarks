@@ -18,8 +18,8 @@
     <script>
         //1.初始化数据
         var hash = init();
-        var keys = hash.keys;
-        var website = hash.website;
+        var keys = hash['keys']
+        var website = hash['website']
 
         function init() {
             //初始化keys的值，三行，两个hash嵌套
@@ -33,23 +33,23 @@
 
             //初始化每个键盘对应的网址
             var website = {
-                'q': 'qq.com', 'w': 'weibo.com', 'e': 'ele.me', 'r': 'renren.com', 't': 'tianya.com', 'y': 'youtube.com', 'u': 'uc.com', 'i': 'iqiyi.com', 'o': 'opera.com', 'p': undefined, 'a': 'acfun.tv', 's': 'sohu.com', 'z': 'zhihu.com', 'm': 'www.mcdonalds.com.cn'
+                'q': 'qq.com', 'w': 'weibo.com', 'e': 'ele.me', 'r': 'renren.com','y': 'youtube.com', 'i': 'iqiyi.com', 'o': 'opera.com', 'p': undefined, 'z': 'zhihu.com', 'm': 'www.mcdonalds.com.cn'
             }
             //取出LocalStorage中的newWebsite中的新网址
-            var websiteInLocalStorage = getFromLocalStorage('newWebsit')
+            var websiteInLocalStorage = getFromLocalStorage('newWebsite')
             //如果localStorage改变了，即websiteInLocalStorage的值为真，才赋值改变website
-            if (websiteInLocalStorage) {
+            if(websiteInLocalStorage){
                 website = websiteInLocalStorage
             }
             //返回keys和website的值，由于return只能返回一个值，所以有两个值时，我们采取hash形式返回
             return {
-                'keys': keys,
-                'website': website
+                "keys": keys,
+                "website": website
             }
         }
 
         //如果localStorage不为空的话，就把localStroage的值传给name，init函数中传给了newWebsite
-        function getFromLocalStorage(name) {
+        function getFromLocalStorage(name){
             return JSON.parse(localStorage.getItem(name) || 'null')
         }
 
@@ -88,7 +88,7 @@
                 img2.onerror = function (srcError) {
                     srcError.target.src = '//i.loli.net/2017/11/10/5a05afbc5e183.png'
                 }
-                localStorage.setItem('newWebsite', JSON.stringify(hash))
+                localStorage.setItem('newWebsite', JSON.stringify(website))
             }
             return button
         }

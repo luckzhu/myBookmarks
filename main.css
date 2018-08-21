@@ -13,6 +13,8 @@ main {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background: url(./wall-min.jpg) no-repeat center center;
+  background-size: cover;
 }
 
 .row {
@@ -47,6 +49,10 @@ main {
     height: 15px;
     
 }
+
+
+
+
 
 .key button {
     position: absolute;
